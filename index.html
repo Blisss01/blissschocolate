@@ -27,7 +27,7 @@
 		html { scroll-behavior: smooth; }
 		body { margin: 0; color: var(--ink); background: var(--cream); font-family: 'DM Sans', sans-serif; }
 		a { color: inherit; text-decoration: none; }
-		button, input, textarea { font: inherit; }
+		button, input, textarea, select { font: inherit; }
 		img { display: block; width: 100%; }
 		.wrap { width: min(1180px, calc(100% - 40px)); margin: auto; }
 		.eyebrow { color: var(--caramel); font-size: .72rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
@@ -37,15 +37,15 @@
 		header { position: sticky; top: 0; z-index: 10; border-bottom: 1px solid rgba(234, 223, 212, .8); background: rgba(251, 245, 236, .92); backdrop-filter: blur(12px); }
 		.nav { align-items: center; display: flex; gap: 28px; justify-content: space-between; min-height: 74px; }
 		.brand { align-items: center; display: flex; gap: 10px; font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; }
-		.brand-mark { align-items: center; background: var(--cocoa); border-radius: 50%; color: #fff; display: inline-flex; font-family: 'DM Sans', sans-serif; font-size: .7rem; height: 32px; justify-content: center; width: 32px; }
+		.brand-logo { flex: 0 0 auto; height: 42px; max-width: 110px; object-fit: contain; width: auto; }
 		.nav-links { display: flex; gap: 25px; font-size: .88rem; }
 		.nav-links a:hover { color: var(--caramel); }
-		.nav-cta, .button { background: var(--cocoa); border: 0; border-radius: 4px; color: white; cursor: pointer; display: inline-flex; font-size: .82rem; font-weight: 700; justify-content: center; letter-spacing: .04em; padding: 13px 18px; transition: .2s ease; }
+		.nav-cta, .button { background: var(--cocoa); border: 0; border-radius: 999px; color: white; cursor: pointer; display: inline-flex; font-size: .82rem; font-weight: 700; justify-content: center; letter-spacing: .04em; padding: 13px 20px; transition: .2s ease; }
 		.nav-cta:hover, .button:hover { background: var(--cocoa-dark); transform: translateY(-2px); }
-		.cart-button { align-items: center; background: transparent; border: 1px solid var(--cocoa); border-radius: 4px; color: var(--cocoa); cursor: pointer; display: inline-flex; font-size: .82rem; font-weight: 700; gap: 8px; padding: 11px 13px; }
+		.cart-button { align-items: center; background: transparent; border: 1px solid var(--cocoa); border-radius: 999px; color: var(--cocoa); cursor: pointer; display: inline-flex; font-size: .82rem; font-weight: 700; gap: 8px; padding: 10px 16px; }
 		.cart-count { align-items: center; background: var(--cocoa); border-radius: 50%; color: #fff; display: inline-flex; font-size: .7rem; height: 20px; justify-content: center; min-width: 20px; }
 		.card-actions { align-items: center; display: flex; gap: 12px; }
-		.add-button { background: var(--cocoa); border: 0; border-radius: 3px; color: #fff; cursor: pointer; font-size: .72rem; font-weight: 700; padding: 8px 10px; }
+		.add-button { background: var(--cocoa); border: 0; border-radius: 999px; color: #fff; cursor: pointer; font-size: .72rem; font-weight: 700; padding: 8px 13px; }
 		.add-button:hover { background: var(--cocoa-dark); }
 
 		.hero { overflow: hidden; padding: 82px 0 94px; position: relative; }
@@ -77,11 +77,11 @@
 		.category-title { align-items: baseline; border-bottom: 1px solid var(--line); display: flex; gap: 12px; margin-bottom: 18px; padding-bottom: 12px; }
 		.category-title h3 { font-size: 1.75rem; margin: 0; }
 		.category-title span { color: var(--muted); font-size: .78rem; }
-		.product-grid { display: grid; gap: 18px; grid-template-columns: repeat(4, 1fr); }
-		.product-card { background: var(--paper); border: 1px solid var(--line); position: relative; transition: .25s ease; }
+		.product-grid { display: grid; gap: 18px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+		.product-card { background: var(--paper); border: 1px solid var(--line); min-width: 0; position: relative; transition: .25s ease; }
 		.product-card:hover { box-shadow: var(--shadow); transform: translateY(-4px); }
-		.product-card img { aspect-ratio: 1 / 1; object-fit: cover; }
-		.product-info { padding: 17px; }
+		.product-card img { aspect-ratio: 1 / 1; background: var(--paper); object-fit: contain; padding: 10px; }
+		.product-info { min-width: 0; padding: 17px; }
 		.product-info h4 { font-family: 'Playfair Display', serif; font-size: 1.2rem; margin: 0 0 6px; }
 		.product-info p { color: var(--muted); font-size: .78rem; line-height: 1.5; margin-bottom: 16px; min-height: 36px; }
 		.product-bottom { align-items: center; display: flex; justify-content: space-between; }
@@ -110,8 +110,9 @@
 		form { background: var(--paper); border: 1px solid var(--line); box-shadow: var(--shadow); padding: 32px; }
 		.form-row { display: grid; gap: 16px; grid-template-columns: 1fr 1fr; }
 		label { color: var(--cocoa); display: block; font-size: .78rem; font-weight: 700; margin-bottom: 7px; }
-		input, textarea { background: #fff; border: 1px solid var(--line); border-radius: 2px; color: var(--ink); outline: 0; padding: 13px 12px; width: 100%; }
-		input:focus, textarea:focus { border-color: var(--caramel); box-shadow: 0 0 0 3px rgba(201,135,78,.15); }
+		input, textarea, select { background: #fff; border: 1px solid var(--line); border-radius: 2px; color: var(--ink); outline: 0; padding: 13px 12px; width: 100%; }
+		input:focus, textarea:focus, select:focus { border-color: var(--caramel); box-shadow: 0 0 0 3px rgba(201,135,78,.15); }
+		select:disabled { background: var(--cream); color: var(--muted); cursor: not-allowed; }
 		.field { margin-bottom: 18px; }
 		textarea { min-height: 105px; resize: vertical; }
 		form .button { margin-top: 5px; width: 100%; }
@@ -120,26 +121,56 @@
 		footer { background: #271b18; color: #d9c9c0; padding: 28px 0; }
 		.footer-inner { align-items: center; display: flex; font-size: .78rem; justify-content: space-between; }
 		.footer-inner strong { color: white; font-family: 'Playfair Display', serif; font-size: 1.1rem; }
+		.social-links { align-items: center; display: flex; gap: 10px; }
+		.social-link { align-items: center; border: 1px solid rgba(93,46,39,.35); border-radius: 50%; color: var(--cocoa); display: inline-flex; height: 40px; justify-content: center; transition: .2s ease; width: 40px; }
+		.social-link:hover { background: var(--caramel); border-color: var(--caramel); color: var(--cocoa-dark); transform: translateY(-2px); }
+		.social-link:focus-visible { outline: 2px solid var(--caramel); outline-offset: 3px; }
+		.social-link svg { height: 20px; width: 20px; }
+		.social-prompt { color: var(--cocoa); font-size: .84rem; font-weight: 700; margin: 24px 0 10px; }
 		.modal { align-items: center; background: rgba(41,32,29,.62); display: none; inset: 0; justify-content: center; padding: 20px; position: fixed; z-index: 20; }
 		.modal.open { display: flex; }
-		.modal-box { background: var(--paper); max-width: 440px; padding: 32px; position: relative; width: 100%; }
+		.modal-box { background: var(--paper); max-height: 90vh; max-width: 520px; overflow-y: auto; padding: 32px; position: relative; width: 100%; }
 		.close { background: none; border: 0; color: var(--muted); cursor: pointer; font-size: 1.5rem; position: absolute; right: 13px; top: 10px; }
 		.modal-box h3 { font-size: 2rem; margin: 0 0 9px; }
 		.modal-box p { color: var(--muted); line-height: 1.6; }
+		.modal-product-image { aspect-ratio: 4 / 3; background: var(--paper); border-radius: 6px; margin: 8px 0 18px; object-fit: contain; padding: 10px; }
 		.cart-list { border-top: 1px solid var(--line); margin: 18px 0; max-height: 300px; overflow-y: auto; }
 		.cart-item { align-items: center; border-bottom: 1px solid var(--line); display: grid; gap: 10px; grid-template-columns: 1fr auto; padding: 13px 0; }
 		.cart-item strong { display: block; font-size: .88rem; }
 		.cart-item small { color: var(--muted); display: block; font-size: .75rem; margin-top: 3px; }
 		.quantity-controls { align-items: center; display: flex; gap: 8px; }
-		.quantity-controls button { background: var(--cream); border: 1px solid var(--line); cursor: pointer; height: 25px; width: 25px; }
+		.quantity-controls button { background: var(--cream); border: 1px solid var(--line); border-radius: 50%; cursor: pointer; height: 28px; width: 28px; }
 		.cart-total { display: flex; justify-content: space-between; margin: 15px 0; }
 		.empty-cart { color: var(--muted); font-size: .9rem; padding: 18px 0; }
+		.checkout-form { background: transparent; border: 0; box-shadow: none; padding: 0; }
+		.checkout-form[hidden] { display: none; }
+		.location-status { color: var(--muted); font-size: .72rem; line-height: 1.5; margin: -8px 0 16px; min-height: 1em; }
+		.button:disabled { cursor: not-allowed; opacity: .55; transform: none; }
+		.store-layout { align-items: start; display: grid; gap: 28px; grid-template-columns: minmax(0, 1fr) 320px; margin: 0 auto; max-width: 1540px; padding: 24px 20px 0; }
+		.store-layout main { min-width: 0; }
+		.cart-panel { align-self: start; background: var(--paper); border: 1px solid var(--line); box-shadow: var(--shadow); max-height: calc(100vh - 110px); overflow-y: auto; padding: 24px; position: sticky; top: 94px; }
+		.cart-panel-heading { align-items: start; display: flex; justify-content: space-between; }
+		.cart-panel-heading h3 { font-size: 1.8rem; margin: 0 0 10px; }
+		.cart-panel-close { display: none; }
+		.cart-panel .cart-list { max-height: 34vh; }
+		.cart-panel .cart-total { align-items: center; border-top: 1px solid var(--line); padding-top: 15px; }
+		.cart-panel .button { width: 100%; }
+
+		@media (max-width: 1100px) {
+			.store-layout { display: block; }
+			.cart-panel { bottom: 16px; display: none; left: 16px; margin-left: auto; max-height: calc(100vh - 32px); max-width: 380px; position: fixed; right: 16px; top: auto; width: auto; z-index: 15; }
+			.cart-panel.mobile-open { display: block; }
+			.cart-panel-close { display: block; }
+		}
+		@media (max-width: 1200px) {
+			.product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+		}
 
 		@media (max-width: 850px) {
 			.hero-grid, .about-grid, .contact-grid { gap: 42px; grid-template-columns: 1fr; }
 			.hero { padding-top: 60px; }
 			.hero-photo { margin: auto; max-width: 520px; width: 90%; }
-			.product-grid { grid-template-columns: repeat(2, 1fr); }
+			.product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 			.contact-grid { gap: 35px; }
 		}
 		@media (max-width: 600px) {
@@ -166,19 +197,26 @@
 			form { padding: 23px 18px; }
 			.footer-inner { align-items: start; flex-direction: column; gap: 10px; }
 		}
+		@media (max-width: 480px) {
+			.product-bottom { align-items: flex-start; flex-direction: column; gap: 8px; }
+			.card-actions { gap: 8px; }
+			.mini-button { font-size: .68rem; }
+			.add-button { font-size: .68rem; padding: 6px 9px; }
+		}
 	</style>
 </head>
 <body>
 	<header>
 		<div class="wrap nav">
-			<a class="brand" href="#top"><span class="brand-mark">B</span> BLISS &amp; Co.</a>
+			<a class="brand" href="#top"><img class="brand-logo" src="bliss_logo.png" alt="Bliss &amp; Co. logo"> BLISS &amp; Co.</a>
 			<nav class="nav-links" aria-label="Primary navigation">
 				<a href="#shop">Shop</a><a href="#about">Our story</a><a href="#contact">Contact</a>
 			</nav>
-			<div><a class="nav-cta" href="#contact">Make an enquiry</a><button class="cart-button" id="cart-button" type="button">Cart <span class="cart-count" id="cart-count">0</span></button></div>
+			<div><a class="nav-cta" href="#contact">Make an enquiry</a><button class="cart-button" id="cart-button" type="button" aria-controls="cart-panel" aria-expanded="false">Cart <span class="cart-count" id="cart-count">0</span></button></div>
 		</div>
 	</header>
 
+	<div class="store-layout">
 	<main id="top">
 		<section class="hero">
 			<div class="wrap hero-grid">
@@ -241,6 +279,15 @@
 				<div><div class="eyebrow">Let’s make it special</div>
                 <h2>Have a sweet idea?</h2>
                 <p class="contact-copy">Tell us your name, number, email, and what you need. We will get back to you with flavours, pricing, and a plan that fits.</p>
+				<p class="social-prompt">Visit our online platforms</p>
+				<nav class="social-links" aria-label="Social media">
+					<a class="social-link" href="https://www.instagram.com/blisschocolate01?utm_source=ig_web_button_share_sheet&amp;stkn=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram">
+						<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"></circle></svg>
+					</a>
+					<a class="social-link" href="https://www.facebook.com/profile.php?id=61594523811024" target="_blank" rel="noopener noreferrer" aria-label="Facebook" title="Facebook">
+						<svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M13.5 21v-8h2.7l.4-3.1h-3.1v-2c0-.9.3-1.5 1.6-1.5h1.6V3.6c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3v2.1H7.2V13h2.8v8h3.5z"></path></svg>
+					</a>
+				</nav>
                 <div class="contact-details"><p>
 					<strong>Write to us</strong>blisschocolate01@gmail.com</p>
 					<p><strong>Call / WhatsApp</strong>+91 8949106245 | +91 8209408477</p>
@@ -261,35 +308,48 @@
 			</div>
 		</section>
 	</main>
+	<aside class="cart-panel" id="cart-panel" aria-label="Your cart">
+		<div class="cart-panel-heading">
+			<div><div class="eyebrow">Your selection</div><h3 id="cart-title">Your cart</h3></div>
+			<button class="close cart-panel-close" id="close-cart" type="button" aria-label="Close cart">×</button>
+		</div>
+		<div class="cart-list" id="cart-list"></div>
+		<div class="cart-total"><strong>Subtotal</strong><span id="cart-subtotal">₹0</span></div>
+		<button class="button" id="buy-now" type="button" disabled>Buy Now</button>
+		<form class="checkout-form" id="checkout-form" hidden>
+			<div class="field"><label for="checkout-name">Full name *</label><input id="checkout-name" name="customerName" type="text" autocomplete="name" placeholder="Enter your full name" required></div>
+			<div class="field"><label for="checkout-address">Full address *</label><textarea id="checkout-address" name="address" autocomplete="street-address" placeholder="House no., street, area, landmark" required></textarea></div>
+			<div class="form-row">
+				<div class="field"><label for="checkout-state">State / UT *</label><select id="checkout-state" name="state" autocomplete="address-level1" required><option value="">Choose a state / UT</option></select></div>
+				<div class="field"><label for="checkout-city">City *</label><select id="checkout-city" name="city" autocomplete="address-level2" required disabled><option value="">Choose a state first</option></select></div>
+			</div>
+			<p class="location-status" id="city-status" role="status" aria-live="polite">Choose a state to load cities.</p>
+			<div class="form-row">
+				<div class="field"><label for="checkout-pincode">Pincode *</label><input id="checkout-pincode" name="pincode" type="text" inputmode="numeric" autocomplete="postal-code" pattern="[0-9]{6}" data-digits-only data-max-digits="6" title="Enter a 6-digit pincode" placeholder="6-digit pincode" required></div>
+				<div class="field"><label for="checkout-phone">Contact number *</label><input id="checkout-phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" pattern="[0-9]{10}" data-digits-only data-max-digits="10" title="Enter a 10-digit contact number" placeholder="10-digit mobile number" required></div>
+			</div>
+			<div class="field"><label for="checkout-email">Email address *</label><input id="checkout-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required></div>
+			<button class="button" type="submit">Continue</button>
+		</form>
+	</aside>
+	</div>
 
 	<footer><div class="wrap footer-inner">
         <strong>Bliss &amp; Co.</strong>
         <span>© 2026 Bliss &amp; Co. Made for good moments.</span>
-		<span>FSSAI Licence: 22226067001108</span></div></footer>
+		<span>FSSAI Licence: 22226067001108</span>
+	</div></footer>
 	<div class="modal" id="product-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
         <div class="modal-box">
             <button class="close" id="close-modal" aria-label="Close">×</button>
             <div class="eyebrow">A closer look</div>
+			<img class="modal-product-image" id="modal-image" alt="">
             <h3 id="modal-title"></h3>
             <p id="modal-description"></p>
             <p class="price" id="modal-price"></p>
             <a class="button" href="#contact" id="modal-enquire">Enquire about this</a>
         </div>
     </div>
-	<div class="modal" id="cart-modal" role="dialog" aria-modal="true" aria-labelledby="cart-title">
-        <div class="modal-box">
-            <button class="close" id="close-cart" aria-label="Close">×</button>
-            <div class="eyebrow">Your selection</div>
-            <h3 id="cart-title">Your cart</h3>
-            <div class="cart-list" id="cart-list"></div>
-            <div class="cart-total">
-                <strong>Ready to order?</strong>
-                <span>WhatsApp us</span>
-            </div>
-            <button class="button" id="buy-now" type="button">Buy Now on WhatsApp</button>
-        </div>
-    </div>
-
 
 	<!-- Product catalog data -->
 	<script>
@@ -300,24 +360,28 @@
 				['Pure Milk Chocolate', 'A smooth, creamy milk chocolate.', '₹59', '2.png'],
 				['Twin Bliss Bar', 'A delightful combination of two premium chocolates.', '₹69', '3.jpg'], 
 				['Cherry Dark Indulgence', 'A rich, fruity dark chocolate with cherry notes.', '₹69', '4.png'], 
-				['Oreo Crunch Bar', 'A delicious combination of Oreo cookies and dark chocolate.', '₹99', '5.png'], 
-				['Rainbow Drizzle Bar', 'A vibrant mix of colours and flavours.', '₹99', '6.png'], 
-				['Nutty Cocoa Bar', 'A nutty, cocoa-rich treat.', '₹149', '15.png'], 
-				['Love You Chocolate Bar', 'A heartfelt gift for someone you love.', '₹149', '8.jpg'],
+				['Oreo Crunch Bar', 'A delicious combination of Oreo cookies and dark chocolate.', '₹79', '5.png'], 
+				['Rainbow Drizzle Bar', 'A vibrant mix of colours and flavours.', '₹59', '6.png'], 
+				['Nutty Cocoa Bar', 'A nutty, cocoa-rich treat.', '₹99', '15.png'], 
+				['Love You Chocolate Bar', 'A heartfelt gift for someone you love.', '₹99', '8.jpg'],
+				['Raksha Bandhan Chocolate Duo', 'A special gift for Raksha Bandhan.', '₹99', '9.png'],
+				['Rakhi Celebration Chocolate Box', 'A special gift for Rakhi Celebration.', '₹109', '10.png'],
+				['Raksha Bond Treats', 'Premium chocolate bars for celebrating sibling bonds.', '₹59', '11.png'],
 				['Birthday Chocolate Gift Wrapping', 'A thoughtful chocolate gift for a special birthday.', '₹59', '12.png'],
+				['Raksha Bandhan Duo Bar', 'A colourful chocolate gift for Raksha Bandhan.', '₹79', '13.png'],
 				['Couple Birthday Chocolate Bar', 'A personalised chocolate treat for birthday celebrations.', '₹59', '14.png'],
 			]},
 
 			{ title: 'Celebration boxes', note: 'For birthdays, milestones and more', items: [
 				['Bliss Assorted Chocolate Tub', 'A colourful assortment of handcrafted chocolate treats, Having Four varieties in this box Dark, Pure Milk, Pure White and Mixed 10 pieces per box.', '₹99', 'box1.png'], 
 				['Golden Heart Chocolate Box', 'A thoughtful golden gift filled with chocolate joy.', '₹69', 'box2.jpg'], 
-				['Love You Chocolate Gift Box', 'A sweet chocolate gift for someone special.', '₹199', 'box3.png'], 
-				['Bliss Chocolate Cone', 'Include 6 pieces of chocolate in it Buy one Get one Free.', '₹149', 'cone1.jpeg'], 
+				['Love You Chocolate Gift Box', 'A sweet chocolate gift for someone special.', '₹129', 'box3.png'], 
+				['Happy Rakhi Chocolate Box', 'A festive chocolate box made for Raksha Bandhan.', '₹149', 'box4.png'], 
 				['1 KG Pure Dark Chocolate', 'A rich, indulgent dark chocolate in a convenient 1 KG pack.', '₹650', 'Dark.png'], 
 				['1 KG Pure Milk Chocolate', 'A creamy, smooth milk chocolate in a convenient 1 KG pack.', '₹800', 'pure_milk.png'], 
 				['1 KG Mix(Dark & Milk) Chocolate', 'A delightful blend of dark and milk chocolate.', '₹700', 'dark&milk.png'], 
 				['1 KG Dark Tutti Futti Chocolate', 'A rich, indulgent dark chocolate with a delightful twist.', '₹700', 'tutti_futti.png'], 
-				['1 KG Dark With Dry Fruit Chocolate', 'A rich, indulgent dark chocolate infused with dry fruits.', '₹1200', 'dry_fruit.png'], 
+				['1 KG Dark With Dry Fruit Chocolate', 'A rich, indulgent dark chocolate infused with dry fruits.', '₹800', 'dry_fruit.png'], 
 				['1 KG Dark With Oreo Chocolate', 'A rich, indulgent dark chocolate with Oreo cookie bits.', '₹750', 'oreo.png'], 
 				
 			]},
@@ -328,11 +392,8 @@
 				['Red Ribbon Celebration Hamper', 'A beautifully packed hamper with chocolates, namkeen, juices and snacks for every occasion.', '₹459', 'hamper4.png'],
 				['Chocolate Lover’s Gift Tray', 'A delightful collection of chocolates, candy bars and sweet treats for chocolate lovers.', '₹599', 'hamper5.jpeg'],
 				['Festive Crunch Hamper', 'A festive basket filled with crunchy snacks, namkeen, drinks and chocolates.', '₹399', 'hamper6.jpeg'],
-				['Deluxe Dry Fruit & Chocolate Hamper', 'Premium almonds, cashews, raisins, pistachios, chocolates and sweets in an elegant gift box.', '₹650', 'hamper7.jpeg'],
-				['Birthday Gift Hamper', 'Premium gifts, and products in an elegant gift box.', '₹2499', 'hamper8.jpeg'],
-				['Birthday Gift Hamper', 'Premium gifts, and products in an elegant gift box.', '₹1499', 'hamper9.jpeg'],
-				['Birthday Gift Hamper', 'Premium gifts, and products in an elegant gift box.', '₹1499', 'hamper10.jpeg'],
-				['Gift Hamper', 'Premium gifts, and products in an elegant gift box.', '₹599', 'hamper11.jpeg'],
+				['Deluxe Dry Fruit & Chocolate Hamper', 'Premium almonds, cashews, raisins, pistachios, chocolates and sweets in an elegant gift box.', '₹650', 'hamper7.jpeg'], 
+
 			]}
 		];
 
@@ -362,6 +423,9 @@
 
 		const modal = document.querySelector('#product-modal');
 		function openModal(item) {
+			const modalImage = document.querySelector('#modal-image');
+			modalImage.src = item[3];
+			modalImage.alt = `${item[0]} chocolate`;
 			document.querySelector('#modal-title').textContent = item[0];
 			document.querySelector('#modal-description').textContent = item[1];
 			document.querySelector('#modal-price').textContent = item[2];
@@ -372,11 +436,71 @@
 		modal.addEventListener('click', (event) => { if (event.target === modal) closeModal(); });
 		document.querySelector('#modal-enquire').addEventListener('click', closeModal);
 
-		const cartModal = document.querySelector('#cart-modal');
+		const cartPanel = document.querySelector('#cart-panel');
 		const cartList = document.querySelector('#cart-list');
 		const cartCount = document.querySelector('#cart-count');
+		const cartSubtotal = document.querySelector('#cart-subtotal');
+		const cartButton = document.querySelector('#cart-button');
+		const buyNowButton = document.querySelector('#buy-now');
+		const checkoutForm = document.querySelector('#checkout-form');
+		const stateSelect = document.querySelector('#checkout-state');
+		const citySelect = document.querySelector('#checkout-city');
+		const cityStatus = document.querySelector('#city-status');
 		const cart = [];
 		const whatsappNumber = '918209408477';
+		const indianStates = [
+			'Andaman and Nicobar Islands', 'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chandigarh',
+			'Chhattisgarh', 'Dadra and Nagar Haveli and Daman and Diu', 'Delhi', 'Goa', 'Gujarat', 'Haryana',
+			'Himachal Pradesh', 'Jammu and Kashmir', 'Jharkhand', 'Karnataka', 'Kerala', 'Ladakh', 'Lakshadweep',
+			'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland', 'Odisha', 'Puducherry',
+			'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand',
+			'West Bengal'
+		];
+		let cityRequestId = 0;
+
+		indianStates.forEach((state) => stateSelect.add(new Option(state, state)));
+		stateSelect.addEventListener('change', async () => {
+			const selectedState = stateSelect.value;
+			const requestId = ++cityRequestId;
+			citySelect.disabled = true;
+			citySelect.replaceChildren(new Option(selectedState ? 'Loading cities...' : 'Choose a state first', ''));
+			cityStatus.textContent = selectedState ? 'Loading city list...' : 'Choose a state to load cities.';
+			if (!selectedState) return;
+
+			const apiStates = selectedState === 'Dadra and Nagar Haveli and Daman and Diu'
+				? ['Dadra and Nagar Haveli', 'Daman and Diu']
+				: [selectedState];
+			try {
+				const cityLists = await Promise.all(apiStates.map(async (state) => {
+					const response = await fetch('https://countriesnow.space/api/v0.1/countries/state/cities', {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify({ country: 'India', state })
+					});
+					if (!response.ok) throw new Error('City request failed');
+					const result = await response.json();
+					if (result.error || !Array.isArray(result.data)) throw new Error('City data unavailable');
+					return result.data;
+				}));
+				if (requestId !== cityRequestId) return;
+				const cities = [...new Set(cityLists.flat().filter((city) => typeof city === 'string' && city.trim()))]
+					.sort((first, second) => first.localeCompare(second, 'en'));
+				if (!cities.length) throw new Error('No cities found');
+				citySelect.replaceChildren(new Option('Choose a city', ''), ...cities.map((city) => new Option(city, city)));
+				citySelect.disabled = false;
+				cityStatus.textContent = `${cities.length} cities available.`;
+			} catch (error) {
+				if (requestId !== cityRequestId) return;
+				citySelect.replaceChildren(new Option('Cities unavailable', ''));
+				cityStatus.textContent = 'Could not load cities. Check your internet, then select the state again.';
+			}
+		});
+		checkoutForm.addEventListener('reset', () => {
+			cityRequestId += 1;
+			citySelect.disabled = true;
+			citySelect.replaceChildren(new Option('Choose a state first', ''));
+			cityStatus.textContent = 'Choose a state to load cities.';
+		});
 
 		function productLink(item) {
 			const slug = item[0].toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
@@ -387,13 +511,18 @@
 			if (existing) existing.quantity += 1;
 			else cart.push({ item, quantity: 1 });
 			renderCart();
-			cartModal.classList.add('open');
 		}
 		function renderCart() {
 			const totalItems = cart.reduce((total, cartItem) => total + cartItem.quantity, 0);
 			cartCount.textContent = totalItems;
+			const subtotal = cart.reduce((total, cartItem) => total + Number(cartItem.item[2].replace(/[^0-9]/g, '')) * cartItem.quantity, 0);
+			cartSubtotal.textContent = `₹${subtotal}`;
+			buyNowButton.disabled = !cart.length;
 			if (!cart.length) {
 				cartList.innerHTML = '<p class="empty-cart">Your cart is empty.</p>';
+				checkoutForm.hidden = true;
+				checkoutForm.reset();
+				buyNowButton.hidden = false;
 				return;
 			}
 			cartList.innerHTML = cart.map((cartItem, index) => `<div class="cart-item">
@@ -414,17 +543,38 @@
 				renderCart();
 			}));
 		}
-		function buyNowOnWhatsApp() {
+		function buyNowOnWhatsApp(event) {
+			event.preventDefault();
 			if (!cart.length) return;
 			const lines = cart.map(({ item, quantity }) => `- ${item[0]} | ${item[2]} | Qty: ${quantity}\n  Product link: ${productLink(item)}`);
-			const message = `Hello Bliss & Co., I would like to order:\n\n${lines.join('\n')}\n\nPlease confirm availability and delivery details.`;
-			window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, '_blank');
+			const details = new FormData(checkoutForm);
+			const customerDetails = `Customer details:\nName: ${details.get('customerName')}\nAddress: ${details.get('address')}\nCity: ${details.get('city')}\nState / UT: ${details.get('state')}\nPincode: ${details.get('pincode')}\nContact: ${details.get('phone')}\nEmail: ${details.get('email')}`;
+			const message = `Hello Bliss & Co., I would like to order:\n\n${lines.join('\n')}\n\n${customerDetails}`;
+			window.location.href = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
 		}
-		document.querySelector('#cart-button').addEventListener('click', () => { renderCart(); cartModal.classList.add('open'); });
-		document.querySelector('#close-cart').addEventListener('click', () => cartModal.classList.remove('open'));
-		document.querySelector('#buy-now').addEventListener('click', buyNowOnWhatsApp);
-		cartModal.addEventListener('click', (event) => { if (event.target === cartModal) cartModal.classList.remove('open'); });
-
+		cartButton.addEventListener('click', () => {
+			renderCart();
+			if (window.matchMedia('(max-width: 1100px)').matches) {
+				const isOpen = cartPanel.classList.toggle('mobile-open');
+				cartButton.setAttribute('aria-expanded', String(isOpen));
+			} else cartPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+		});
+		document.querySelector('#close-cart').addEventListener('click', () => {
+			cartPanel.classList.remove('mobile-open');
+			cartButton.setAttribute('aria-expanded', 'false');
+		});
+		buyNowButton.addEventListener('click', () => {
+			if (!cart.length) return;
+			checkoutForm.hidden = false;
+			buyNowButton.hidden = true;
+			checkoutForm.querySelector('input').focus();
+		});
+		checkoutForm.querySelectorAll('[data-digits-only]').forEach((input) => {
+			input.addEventListener('input', () => {
+				input.value = input.value.replace(/\D/g, '').slice(0, Number(input.dataset.maxDigits));
+			});
+		});
+		checkoutForm.addEventListener('submit', buyNowOnWhatsApp);
 	</script>
 </body>
 </html>
