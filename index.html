@@ -575,21 +575,27 @@
 			payButton.textContent = 'Creating secure payment...';
 
 			try {
-				const items = cart.map(({ item, quantity }) => ({
-					name: item[0],
-					quantity
-				}));
+				const items = cart.map(({ item, quantity }) => ({ name: item[0], quantity }));
+				const controller = new AbortController();
+				const timeout = setTimeout(() => controller.abort(), 30000);
 
 				const orderResponse = await fetch(`${PAYMENT_API}/api/create-order`, {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({ items })
+					body: JSON.stringify({ items }),
+					signal: controller.signal
 				});
+				clearTimeout(timeout);
 
-				const orderData = await orderResponse.json();
-				if (!orderResponse.ok) {
-					throw new Error(orderData.error || 'Could not create payment order.');
-				}
+				let orderData;
+				try { orderData = await orderResponse.json(); }
+				catch { throw new Error('Server se valid response nahi mila.'); }
+
+				if (!orderResponse.ok) throw new Error(orderData.error || 'Could not create payment order.');
+				if (!orderData.order_id) throw new Error('Razorpay order ID nahi mila.');
+				if (typeof Razorpay === 'undefined') throw new Error('Razorpay Checkout load nahi hua. Page refresh karke dobara try karein.');
+
+				payButton.textContent = 'Opening secure payment...';
 
 				const razorpayOptions = {
 					key: orderData.key_id,
@@ -598,39 +604,18 @@
 					name: 'Bliss & Co.',
 					description: 'Chocolate order',
 					order_id: orderData.order_id,
-					prefill: {
-						name: details.get('customerName'),
-						contact: details.get('phone'),
-						email: details.get('email')
-					},
-					theme: {
-						color: '#5d2e27'
-					},
-						handler: async function (response) {
-  						razorpay.close();
+					prefill: { name: details.get('customerName'), contact: details.get('phone'), email: details.get('email') },
+					theme: { color: '#5d2e27' },
+					handler: async function (response) {
 						payButton.textContent = 'Verifying payment...';
-
 						try {
 							const verifyResponse = await fetch(`${PAYMENT_API}/api/verify-payment`, {
-								method: 'POST',
-								headers: { 'Content-Type': 'application/json' },
-								body: JSON.stringify({
-									razorpay_order_id: response.razorpay_order_id,
-									razorpay_payment_id: response.razorpay_payment_id,
-									razorpay_signature: response.razorpay_signature
-								})
+								method: 'POST', headers: { 'Content-Type': 'application/json' },
+								body: { razorpay_order_id: response.razorpay_order_id, razorpay_payment_id: response.razorpay_payment_id, razorpay_signature: response.razorpay_signature }
 							});
-
 							const verifyData = await verifyResponse.json();
-							if (!verifyResponse.ok || !verifyData.success) {
-								throw new Error(verifyData.error || 'Payment verification failed.');
-							}
-
-							const message = buildOrderMessage(
-								details,
-								response.razorpay_order_id,
-								response.razorpay_payment_id
-							);
+							if (!verifyResponse.ok || !verifyData.success) throw new Error(verifyData.error || 'Payment verification failed.');
+							const message = buildOrderMessage(details, response.razorpay_order_id, response.razorpay_payment_id);
 							window.location.href = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
 						} catch (error) {
 							alert(error.message || 'Payment verification failed. Please contact Bliss & Co.');
@@ -638,12 +623,7 @@
 							payButton.textContent = 'Pay securely with Razorpay →';
 						}
 					},
-					modal: {
-						ondismiss: function () {
-							payButton.disabled = false;
-							payButton.textContent = 'Pay securely with Razorpay →';
-						}
-					}
+					modal: { ondismiss: function () { payButton.disabled = false; payButton.textContent = 'Pay securely with Razorpay →'; } }
 				};
 
 				const razorpay = new Razorpay(razorpayOptions);
@@ -654,12 +634,12 @@
 				});
 				razorpay.open();
 			} catch (error) {
-				alert(error.message || 'Could not start Razorpay payment. Please try again.');
+				console.error('Razorpay error:', error);
+				alert(error.name === 'AbortError' ? 'Payment server response mein zyada time lag raha hai. Please dobara try karein.' : (error.message || 'Could not start Razorpay payment. Please try again.'));
 				payButton.disabled = false;
 				payButton.textContent = 'Pay securely with Razorpay →';
 			}
 		}
-
 		function buildOrderMessage(details, razorpayOrderId, razorpayPaymentId) {
 			const lines = cart.map(({ item, quantity }) => `- ${item[0]} | ${item[2]} | Qty: ${quantity}`);
 			const subtotal = cart.reduce((total, cartItem) => total + Number(cartItem.item[2].replace(/[^0-9]/g, '')) * cartItem.quantity, 0);
