@@ -606,7 +606,8 @@
 					theme: {
 						color: '#5d2e27'
 					},
-					handler: async function (response) {
+						handler: async function (response) {
+  						razorpay.close();
 						payButton.textContent = 'Verifying payment...';
 
 						try {
