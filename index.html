@@ -566,6 +566,10 @@
 		const PAYMENT_API = 'https://bliss-razorpay-backend.onrender.com';
 		const payButton = document.querySelector('#pay-button');
 
+		// Wake the Render backend while the customer is filling the checkout form.
+		// This reduces delays caused by the free service going to sleep.
+		fetch(PAYMENT_API, { cache: 'no-store' }).catch(() => {});
+
 		async function buyNowOnWhatsApp(event) {
 			event.preventDefault();
 			if (!cart.length || payButton.disabled) return;
@@ -577,15 +581,19 @@
 			try {
 				const items = cart.map(({ item, quantity }) => ({ name: item[0], quantity }));
 				const controller = new AbortController();
-				const timeout = setTimeout(() => controller.abort(), 30000);
+				const timeout = setTimeout(() => controller.abort(), 90000);
 
-				const orderResponse = await fetch(`${PAYMENT_API}/api/create-order`, {
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({ items }),
-					signal: controller.signal
-				});
-				clearTimeout(timeout);
+				let orderResponse;
+				try {
+					orderResponse = await fetch(`${PAYMENT_API}/api/create-order`, {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify({ items }),
+						signal: controller.signal
+					});
+				} finally {
+					clearTimeout(timeout);
+				}
 
 				let orderData;
 				try { orderData = await orderResponse.json(); }
