@@ -8,6 +8,7 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+	<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 	<style>
 		:root {
 			--ink: #29201d;
@@ -335,7 +336,7 @@
 				<div class="field"><label for="checkout-phone">Contact number *</label><input id="checkout-phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" pattern="[0-9]{10}" data-digits-only data-max-digits="10" title="Enter a 10-digit contact number" placeholder="10-digit mobile number" required></div>
 			</div>
 			<div class="field"><label for="checkout-email">Email address *</label><input id="checkout-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required></div>
-			<button class="button" type="submit">Continue</button>
+			<button class="button" id="pay-button" type="submit">Pay securely with Razorpay →</button>
 		</form>
 	</aside>
 	</div>
@@ -562,18 +563,108 @@
 				changeCartQuantity(item, Number(button.dataset.change));
 			}));
 		}
-		function buyNowOnWhatsApp(event) {
+		const PAYMENT_API = 'https://bliss-razorpay-backend.onrender.com';
+		const payButton = document.querySelector('#pay-button');
+
+		async function buyNowOnWhatsApp(event) {
 			event.preventDefault();
-			if (!cart.length) return;
+			if (!cart.length || payButton.disabled) return;
+
 			const details = new FormData(checkoutForm);
-			const message = buildOrderMessage(details);
-			window.location.href = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+			payButton.disabled = true;
+			payButton.textContent = 'Creating secure payment...';
+
+			try {
+				const items = cart.map(({ item, quantity }) => ({
+					name: item[0],
+					quantity
+				}));
+
+				const orderResponse = await fetch(`${PAYMENT_API}/api/create-order`, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ items })
+				});
+
+				const orderData = await orderResponse.json();
+				if (!orderResponse.ok) {
+					throw new Error(orderData.error || 'Could not create payment order.');
+				}
+
+				const razorpayOptions = {
+					key: orderData.key_id,
+					amount: orderData.amount,
+					currency: orderData.currency,
+					name: 'Bliss & Co.',
+					description: 'Chocolate order',
+					order_id: orderData.order_id,
+					prefill: {
+						name: details.get('customerName'),
+						contact: details.get('phone'),
+						email: details.get('email')
+					},
+					theme: {
+						color: '#5d2e27'
+					},
+					handler: async function (response) {
+						payButton.textContent = 'Verifying payment...';
+
+						try {
+							const verifyResponse = await fetch(`${PAYMENT_API}/api/verify-payment`, {
+								method: 'POST',
+								headers: { 'Content-Type': 'application/json' },
+								body: JSON.stringify({
+									razorpay_order_id: response.razorpay_order_id,
+									razorpay_payment_id: response.razorpay_payment_id,
+									razorpay_signature: response.razorpay_signature
+								})
+							});
+
+							const verifyData = await verifyResponse.json();
+							if (!verifyResponse.ok || !verifyData.success) {
+								throw new Error(verifyData.error || 'Payment verification failed.');
+							}
+
+							const message = buildOrderMessage(
+								details,
+								response.razorpay_order_id,
+								response.razorpay_payment_id
+							);
+							window.location.href = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+						} catch (error) {
+							alert(error.message || 'Payment verification failed. Please contact Bliss & Co.');
+							payButton.disabled = false;
+							payButton.textContent = 'Pay securely with Razorpay →';
+						}
+					},
+					modal: {
+						ondismiss: function () {
+							payButton.disabled = false;
+							payButton.textContent = 'Pay securely with Razorpay →';
+						}
+					}
+				};
+
+				const razorpay = new Razorpay(razorpayOptions);
+				razorpay.on('payment.failed', function (response) {
+					alert(response.error?.description || 'Payment failed. Please try again.');
+					payButton.disabled = false;
+					payButton.textContent = 'Pay securely with Razorpay →';
+				});
+				razorpay.open();
+			} catch (error) {
+				alert(error.message || 'Could not start Razorpay payment. Please try again.');
+				payButton.disabled = false;
+				payButton.textContent = 'Pay securely with Razorpay →';
+			}
 		}
-		function buildOrderMessage(details) {
+
+		function buildOrderMessage(details, razorpayOrderId, razorpayPaymentId) {
 			const lines = cart.map(({ item, quantity }) => `- ${item[0]} | ${item[2]} | Qty: ${quantity}`);
 			const subtotal = cart.reduce((total, cartItem) => total + Number(cartItem.item[2].replace(/[^0-9]/g, '')) * cartItem.quantity, 0);
 			const customerDetails = `Customer details:\nName: ${details.get('customerName')}\nAddress: ${details.get('address')}\nCity: ${details.get('city')}\nState / UT: ${details.get('state')}\nPincode: ${details.get('pincode')}\nContact: ${details.get('phone')}\nEmail: ${details.get('email')}`;
-			return `Hello Bliss & Co.,\nI would like to order:\n\n${lines.join('\n')}\n\nTotal: ₹${subtotal} (Delivery charges are not included in this total.)\n\n${customerDetails}`;
+			const paymentDetails = `Payment: PAID ✅\nRazorpay Order ID: ${razorpayOrderId}\nRazorpay Payment ID: ${razorpayPaymentId}`;
+			return `Hello Bliss & Co.,\nI would like to order:\n\n${lines.join('\n')}\n\nTotal: ₹${subtotal} (Delivery charges are not included in this total.)\n\n${customerDetails}\n\n${paymentDetails}`;
 		}
 		cartButton.addEventListener('click', () => {
 			renderCart();
