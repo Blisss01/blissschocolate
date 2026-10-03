@@ -363,7 +363,7 @@
 		const image = (id) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=600&q=82`;
 		const collections = [
 			{ title: 'Signature bars', note: 'Our most-loved chocolate bars', items: [
-				['Dark Chocolate Bar', 'A rich, intense dark chocolate bar.', '₹59', '1.png'],
+				['Dark Chocolate Bar', 'A rich, intense dark chocolate bar.', '₹1', '1.png'],
 				['Pure Milk Chocolate', 'A smooth, creamy milk chocolate.', '₹59', '2.png'],
 				['Twin Bliss Bar', 'A delightful combination of two premium chocolates.', '₹69', '3.jpg'], 
 				['Cherry Dark Indulgence', 'A rich, fruity dark chocolate with cherry notes.', '₹69', '4.png'], 
@@ -566,9 +566,8 @@
 		const PAYMENT_API = 'https://bliss-razorpay-backend.onrender.com';
 		const payButton = document.querySelector('#pay-button');
 
-		// Wake the Render backend while the customer is filling the checkout form.
-		// This reduces delays caused by the free service going to sleep.
-		fetch(PAYMENT_API, { cache: 'no-store' }).catch(() => {});
+// Wake the Render free service in the background.
+		fetch(`${PAYMENT_API}/`).catch(() => {});
 
 		async function buyNowOnWhatsApp(event) {
 			event.preventDefault();
@@ -583,17 +582,21 @@
 				const controller = new AbortController();
 				const timeout = setTimeout(() => controller.abort(), 90000);
 
-				let orderResponse;
-				try {
-					orderResponse = await fetch(`${PAYMENT_API}/api/create-order`, {
-						method: 'POST',
-						headers: { 'Content-Type': 'application/json' },
-						body: JSON.stringify({ items }),
-						signal: controller.signal
-					});
-				} finally {
-					clearTimeout(timeout);
-				}
+				const orderResponse = await fetch(`${PAYMENT_API}/api/create-order`, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ items, customer: {
+                    name: details.get('customerName'),
+                    address: details.get('address'),
+                    state: details.get('state'),
+                    city: details.get('city'),
+                    pincode: details.get('pincode'),
+                    phone: details.get('phone'),
+                    email: details.get('email')
+                } }),
+					signal: controller.signal
+				});
+				clearTimeout(timeout);
 
 				let orderData;
 				try { orderData = await orderResponse.json(); }
